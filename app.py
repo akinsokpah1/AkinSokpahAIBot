@@ -4,10 +4,10 @@ import openai
 
 app = Flask(__name__)
 
-# ✅ OpenAI Key (from Render dashboard)
+# ✅ Use OpenAI key from Render environment variables
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-# ✅ Simple embedded frontend
+# ✅ Frontend UI (HTML + JS)
 HTML_CODE = """
 <!DOCTYPE html>
 <html>
@@ -92,8 +92,8 @@ def chat():
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role":"system","content":"You are AkinBest AI, a helpful chatbot."},
-                {"role":"user","content": user_message}
+                {"role": "system", "content": "You are AkinBest AI, a helpful chatbot."},
+                {"role": "user", "content": user_message}
             ]
         )
         reply = response.choices[0].message["content"].strip()
@@ -101,6 +101,6 @@ def chat():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-# ✅ Start app (Render will override port)
+# ✅ Start app (Render overrides port automatically)
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=10000)
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
